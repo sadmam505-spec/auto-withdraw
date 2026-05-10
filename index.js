@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // ১. আপনার ফায়ারবেস রিয়েলটাইম ডেটাবেজ URL (শেষে .json অবশ্যই দিবেন)
-const firebase_url = "https://your-project-id.firebaseio.com/LiveWithdrawals.json";
+const firebase_url = "https://mypaymentapp-ef617-default-rtdb.firebaseio.com/LiveWithdrawals.json";
 
 function generateProof() {
     // ২. র‍্যান্ডম আইডি (স্ক্রিনশটের মতো ফরমেট)
