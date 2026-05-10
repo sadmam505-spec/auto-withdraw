@@ -50,7 +50,7 @@ async function sendData() {
         console.log(`Success! New data added at [1] on ${bdDateTime}`);
 
         // ৫. ১০-৩০ সেকেন্ডের র্যান্ডম বিরতি
-        const randomDelay = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+        const randomDelay = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
         console.log(`Waiting ${randomDelay} seconds...`);
         setTimeout(sendData, randomDelay * 1000);
 
