@@ -1,16 +1,16 @@
 const axios = require('axios');
 const http = require('http');
 
-// ফায়ারবেজ ইউআরএল
+// ফায়ারবেজ ইউআরএল
 const firebase_base_url = "https://mypaymentapp-ef617-default-rtdb.firebaseio.com/LiveWithdrawals";
 
 // রেন্ডার সার্ভার পোর্ট লিসেনিং
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('System is Live with Probability Logic...');
+    res.end('System is Live with Universal Timestamp...');
 }).listen(process.env.PORT || 3000);
 
-// প্রবাবিলিটি লজিক অনুযায়ী এমাউন্ট জেনারেশন
+// প্রবাবিলিটি লজিক অনুযায়ী এমাউন্ট জেনারেশন
 function getRandomAmount() {
     const chance = Math.random() * 100;
     let amount = 0;
@@ -35,12 +35,8 @@ async function sendData() {
 
         let updatedData = {};
         
-        const bdDateTime = new Date().toLocaleString('en-GB', { 
-            timeZone: 'Asia/Dhaka', 
-            year: 'numeric', month: '2-digit', day: '2-digit',
-            hour: '2-digit', minute: '2-digit', second: '2-digit', 
-            hour12: true 
-        });
+        // এখন আমরা কোনো নির্দিষ্ট স্ট্রিং না পাঠিয়ে সরাসরি মিলিসেকেন্ড পাঠাচ্ছি
+        const timestamp = new Date().getTime(); 
 
         const randomIdPrefix = Math.floor(Math.random() * (811 - 134 + 1)) + 134;
         
@@ -49,11 +45,10 @@ async function sendData() {
             userId: `${randomIdPrefix}***`,
             amount: getRandomAmount(),
             status: "Paid",
-            time: bdDateTime
+            time: timestamp // এখানে সংখ্যা হিসেবে টাইম সেভ হবে (উদা: 1715386988885)
         };
 
-        // পুরনো ডাটাগুলোকে এক ঘর করে নিচে নামানো (সর্বোচ্চ ৩০টা রাখা)
-        // আমরা ১ থেকে ২৯ পর্যন্ত চেক করবো এবং তাদের i+1 পজিশনে পাঠাবো
+        // পুরনো ডাটাগুলোকে এক ঘর করে নিচে নামানো
         Object.keys(currentData).forEach(key => {
             let currentPos = parseInt(key);
             if (currentPos >= 1 && currentPos < 30) {
@@ -61,9 +56,9 @@ async function sendData() {
             }
         });
 
-        // ফায়ারবেজে আপডেট
+        // ফায়ারবেজে আপডেট
         await axios.put(`${firebase_base_url}.json`, updatedData);
-        console.log(`Success! New Payment: ${updatedData["1"].amount}`);
+        console.log(`Success! New Payment at timestamp: ${timestamp}`);
 
         // ১০ থেকে ৩০ সেকেন্ডের মধ্যে র্যান্ডম বিরতি
         const randomDelay = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
@@ -71,7 +66,6 @@ async function sendData() {
 
     } catch (error) {
         console.error("Error:", error.message);
-        // এরর হলে ১০ সেকেন্ড পর আবার ট্রাই করবে
         setTimeout(sendData, 10000);
     }
 }
