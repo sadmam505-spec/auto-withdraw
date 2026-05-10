@@ -20,9 +20,9 @@ function getRandomAmount() {
     } else if (chance <= 70) {
         amount = Math.floor(Math.random() * (100 - 41 + 1)) + 41; // 41-100
     } else if (chance <= 90) {
-        amount = Math.floor(Math.random() * (250 - 101 + 1)) + 101; // 101-250
+        amount = Math.floor(Math.random() * (245 - 105 + 5)) + 105; // 101-250
     } else {
-        amount = Math.floor(Math.random() * (1000 - 251 + 1)) + 251; // 251-1000
+        amount = Math.floor(Math.random() * (1000 - 250 + 10)) + 250; // 251-1000
     }
     return `$${amount}.00`;
 }
