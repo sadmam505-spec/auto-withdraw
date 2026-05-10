@@ -16,14 +16,23 @@ function getRandomAmount() {
     let amount = 0;
 
     if (chance <= 40) {
-        amount = Math.floor(Math.random() * (40 - 25 + 1)) + 25; // 25-40
+        // ২৫-৪০ (১ করে বাড়বে)
+        amount = Math.floor(Math.random() * (40 - 25 + 1)) + 25; 
     } else if (chance <= 70) {
-        amount = Math.floor(Math.random() * (100 - 41 + 1)) + 41; // 41-100
+        // ৪১-১০০ (১ করে বাড়বে)
+        amount = Math.floor(Math.random() * (100 - 41 + 1)) + 41; 
     } else if (chance <= 90) {
-        amount = Math.floor(Math.random() * (245 - 105 + 5)) + 105; // 101-250
+        // ১০৫-২৪৫ (৫ এর ঘর হিসেবে বাড়বে: ১০৫, ১১০, ১১৫...)
+        // লজিক: (রেঞ্জ / ৫) করে তারপর ৫ দিয়ে গুণ
+        const steps = Math.floor(Math.random() * ((245 - 105) / 5 + 1));
+        amount = 105 + (steps * 5);
     } else {
-        amount = Math.floor(Math.random() * (1000 - 250 + 10)) + 250; // 251-1000
+        // ২৫০-১০০০ (১০ এর ঘর হিসেবে বাড়বে: ২৫০, ২৬০, ২৭০...)
+        // লজিক: (রেঞ্জ / ১০) করে তারপর ১০ দিয়ে গুণ
+        const steps = Math.floor(Math.random() * ((1000 - 250) / 10 + 1));
+        amount = 250 + (steps * 10);
     }
+    
     return `$${amount}.00`;
 }
 
