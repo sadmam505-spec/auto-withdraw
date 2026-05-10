@@ -32,7 +32,7 @@ async function sendData() {
         const randomIdPrefix = Math.floor(Math.random() * (811 - 134 + 1)) + 134;
         updatedData["1"] = {
             userId: `${randomIdPrefix}***`,
-            amount: `$${Math.floor(Math.random() * (500 - 25 + 1)) + 25}.00`,
+            amount: `$${Math.floor(Math.random() * (200 - 25 + 1)) + 25}.00`,
             status: "Paid",
             time: bdDateTime
         };
