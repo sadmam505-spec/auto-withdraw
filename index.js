@@ -1,3 +1,16 @@
+const http = require('http');
+
+// রেন্ডারকে শান্ত রাখার জন্য এই ৫ লাইন ম্যাজিকের মতো কাজ করবে
+http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('Bot is Active');
+}).listen(process.env.PORT || 3000);
+
+// এর নিচে আপনার আগের কোডটা যেমন ছিল ঠিক তেমনই থাকবে...
+const axios = require('axios');
+// বাকি সব আপনার আগের কোড...
+
+
 const axios = require('axios');
 const http = require('http');
 
