@@ -1,54 +1,64 @@
 const axios = require('axios');
 const http = require('http');
 
-// ১. আপনার ফায়ারবেস লিঙ্ক
-const firebase_url = "https://mypaymentapp-ef617-default-rtdb.firebaseio.com/LiveWithdrawals.json";
+// আপনার ফায়ারবেস লিঙ্ক (সরাসরি নোড পর্যন্ত)
+const firebase_base_url = "https://mypaymentapp-ef617-default-rtdb.firebaseio.com/LiveWithdrawals";
 
-// রেন্ডার যাতে বন্ধ না হয় তার জন্য সার্ভার
+// রেন্ডার সার্ভার চালু রাখা
 http.createServer((req, res) => {
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Bot is running with BD Date & Time...');
+    res.end('Push-down system with Date & Time is running...');
 }).listen(process.env.PORT || 3000);
 
-function sendData() {
-    const randomIdPrefix = Math.floor(Math.random() * (811 - 134 + 1)) + 134;
-    const userId = `${randomIdPrefix}***`;
-    const amount = Math.floor(Math.random() * (500 - 25 + 1)) + 25;
+async function sendData() {
+    try {
+        console.log("Fetching current data to re-order...");
+        
+        // ১. ফায়ারবেস থেকে বর্তমানের সব ডাটা নিয়ে আসা
+        const response = await axios.get(`${firebase_base_url}.json`);
+        let currentData = response.data || {};
 
-    // ২. বাংলাদেশের তারিখ ও সময় একসাথে সেট করা হয়েছে এখানে
-    const bdDateTime = new Date().toLocaleString('en-GB', { 
-        timeZone: 'Asia/Dhaka', 
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit', 
-        hour12: true 
-    });
-
-    const data = {
-        userId: userId,
-        amount: `$${amount}.00`,
-        status: "Paid",
-        time: bdDateTime // এখানে তারিখ এবং সময় একসাথে যাবে
-    };
-
-    axios.post(firebase_url, data)
-        .then(response => {
-            console.log(`Sent Success: ID: ${userId} | DateTime: ${bdDateTime}`);
-            
-            // ৩. ১০ থেকে ৩০ সেকেন্ডের মধ্যে র্যান্ডম বিরতি
-            const randomDelay = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
-            console.log(`Waiting for ${randomDelay} seconds...`);
-            
-            setTimeout(sendData, randomDelay * 1000);
-        })
-        .catch(error => {
-            console.error("Error:", error.message);
-            setTimeout(sendData, 5000);
+        // ২. নতুন লিস্ট তৈরি (সবাইকে ১ ঘর নিচে পাঠানো)
+        let updatedData = {};
+        
+        // নতুন ডাটা তৈরি (পজিশন ১ এর জন্য)
+        const bdDateTime = new Date().toLocaleString('en-GB', { 
+            timeZone: 'Asia/Dhaka', 
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit', 
+            hour12: true 
         });
+
+        const randomIdPrefix = Math.floor(Math.random() * (811 - 134 + 1)) + 134;
+        updatedData["1"] = {
+            userId: `${randomIdPrefix}***`,
+            amount: `$${Math.floor(Math.random() * (500 - 25 + 1)) + 25}.00`,
+            status: "Paid",
+            time: bdDateTime
+        };
+
+        // ৩. পুরনো ডাটাগুলোকে ২ থেকে ৩০ নম্বরে পাঠানো
+        for (let i = 1; i < 30; i++) {
+            if (currentData[i]) {
+                updatedData[i + 1] = currentData[i];
+            }
+        }
+
+        // ৪. পুরো লিস্টটি একবারে ফায়ারবেসে আপডেট করা
+        await axios.put(`${firebase_base_url}.json`, updatedData);
+        
+        console.log(`Success! New data added at [1] on ${bdDateTime}`);
+
+        // ৫. ১০-৩০ সেকেন্ডের র্যান্ডম বিরতি
+        const randomDelay = Math.floor(Math.random() * (30 - 10 + 1)) + 10;
+        console.log(`Waiting ${randomDelay} seconds...`);
+        setTimeout(sendData, randomDelay * 1000);
+
+    } catch (error) {
+        console.error("Error occurred:", error.message);
+        setTimeout(sendData, 10000);
+    }
 }
 
-// রান করা হলো
+// স্টার্ট
 sendData();
