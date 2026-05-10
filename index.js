@@ -1,53 +1,37 @@
 const axios = require('axios');
 
-// ১. আপনার ফায়ারবেস রিয়েলটাইম ডেটাবেজ URL (শেষে .json অবশ্যই দিবেন)
+// আপনার ফায়ারবেস লিঙ্কটি এখানে বসান (লিঙ্কের শেষে .json থাকতে হবে)
 const firebase_url = "https://mypaymentapp-ef617-default-rtdb.firebaseio.com/LiveWithdrawals.json";
 
-function generateProof() {
-    // ২. র‍্যান্ডম আইডি (স্ক্রিনশটের মতো ফরমেট)
-    const randomID = "ID: " + (Math.floor(Math.random() * 900) + 100) + "***";
-    
-    // ৩. র‍্যান্ডম অ্যামাউন্ট (আপনার দেওয়া স্ক্রিনশটের অ্যামাউন্টগুলো)
-    const amounts = ["+$5.00", "+$12.50", "+$7.20", "+$3.00", "+$10.00", "+$2.50", "+$15.00"];
-    const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
-    
-    // ৪. বর্তমান সময় (আপনার ডিজাইনের মতো: DD/MM/YY HH:mm:ss)
-    const now = new Date();
-    const formattedTime = now.toLocaleString("en-GB", { 
-        timeZone: "Asia/Dhaka",
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-    }).replace(',', '');
+function sendData() {
+    // ১. ১৩৪ থেকে ৮১১ এর মধ্যে র্যান্ডম ইউজার আইডি তৈরি
+    const randomIdPrefix = Math.floor(Math.random() * (811 - 134 + 1)) + 134;
+    const userId = `${randomIdPrefix}***`;
+
+    // ২. ২৫ থেকে ৫০০ এর মধ্যে র্যান্ডম ডলার অ্যামাউন্ট তৈরি
+    const amount = Math.floor(Math.random() * (500 - 25 + 1)) + 25;
 
     const data = {
-        userID: randomID,
-        dateTime: formattedTime,
-        amount: randomAmount,
-        status: "PAID"
+        userId: userId,
+        amount: `$${amount}.00`,
+        status: "Paid", // এখানে 'Success' এর বদলে 'Paid' করে দিলাম
+        time: new Date().toLocaleTimeString()
     };
 
-    // ৫. ফায়ারবেসে ডেটা পুশ করা
     axios.post(firebase_url, data)
-        .then(() => {
-            console.log("Sent Success: " + randomID + " | Amount: " + randomAmount);
+        .then(response => {
+            console.log(`Sent Success: ID: ${userId} | Amount: $${amount} | Status: Paid`);
+            
+            // ৩. ১০ থেকে ৫০ সেকেন্ডের মধ্যে র্যান্ডম বিরতি (Random Delay)
+            const randomDelay = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+            console.log(`Waiting for ${randomDelay} seconds before next entry...`);
+            
+            setTimeout(sendData, randomDelay * 1000);
         })
-        .catch(err => {
-            console.log("Error logic: " + err.message);
+        .catch(error => {
+            console.error("Error sending data:", error.message);
+            setTimeout(sendData, 5000);
         });
-
-    // ৬. আপনার চাহিদা অনুযায়ী গ্যাপ (৫০০ms থেকে ১০০০ms)
-    // অর্থাৎ সেকেন্ডে ১টা বা ২টা ডেটা যাবে
-    const minDelay = 500; 
-    const maxDelay = 1000;
-    const randomDelay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
-    
-    setTimeout(generateProof, randomDelay);
 }
 
-// সিস্টেম স্টার্ট
-generateProof();
+sendData();
