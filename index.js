@@ -70,7 +70,7 @@ async function sendData() {
         console.log(`Success! New Payment at timestamp: ${timestamp}`);
 
         // ১০ থেকে ৩০ সেকেন্ডের মধ্যে র্যান্ডম বিরতি
-        const randomDelay = Math.floor(Math.random() * (25 - 1 + 1)) + 1;
+        const randomDelay = Math.floor(Math.random() * (17 - 1 + 1)) + 1;
         setTimeout(sendData, randomDelay * 1000);
 
     } catch (error) {
