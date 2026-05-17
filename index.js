@@ -34,7 +34,7 @@ function getRandomPoints() {
     }
     
     // ইন্টারন্যাশনাল স্টাইলে কমা ফরম্যাট সহ রিটার্ন (উদা: 45,500 PTS)
-    return `${amount.toLocaleString()} PTS`;
+    return `${amount.toLocaleString()} pts`;
 }
 
 async function sendData() {
