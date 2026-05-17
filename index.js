@@ -51,7 +51,7 @@ async function sendData() {
         // ১ নম্বর পজিশনে নতুন ডাটা (UserId সম্পূর্ণ রিমুভড)
         updatedData["1"] = {
             amount: getRandomPoints(),
-            status: "Paid",
+            status: "Success",
             time: timestamp
         };
 
