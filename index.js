@@ -28,7 +28,7 @@ function getRandomPoints() {
     } else {
         // ৫০,৫০০ থেকে ২,০০,০০০ পর্যন্ত (৬০% চান্স)
         const min = 310000;
-        const max = 2000000;
+        const max = 5000000;
         const steps = Math.floor(Math.random() * ((max - min) / 500 + 1));
         amount = min + (steps * 500);
     }
