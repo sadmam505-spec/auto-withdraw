@@ -21,20 +21,20 @@ function getRandomPoints() {
     if (chance <= 40) {
         // ২৫,০০০ থেকে ৫০,০০০ পর্যন্ত (৪০% চান্স)
         // লজিক: রেঞ্জকে ৫০০ দিয়ে ভাগ করে র্যান্ডম স্টেপ বের করে আবার ৫০০ দিয়ে গুণ
-        const min = 25000;
-        const max = 50000;
+        const min = 100000;
+        const max = 2000000;
         const steps = Math.floor(Math.random() * ((max - min) / 500 + 1));
         amount = min + (steps * 500);
     } else {
         // ৫০,৫০০ থেকে ২,০০,০০০ পর্যন্ত (৬০% চান্স)
-        const min = 50500;
-        const max = 200000;
+        const min = 300000;
+        const max = 2000000;
         const steps = Math.floor(Math.random() * ((max - min) / 500 + 1));
         amount = min + (steps * 500);
     }
     
     // ইন্টারন্যাশনাল স্টাইলে কমা ফরম্যাট সহ রিটার্ন (উদা: 45,500 PTS)
-    return `${amount.toLocaleString()} pts`;
+    return `${amount.toLocaleString()} coins`;
 }
 
 async function sendData() {
