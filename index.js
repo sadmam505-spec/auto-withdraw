@@ -22,12 +22,12 @@ function getRandomPoints() {
         // ২৫,০০০ থেকে ৫০,০০০ পর্যন্ত (৪০% চান্স)
         // লজিক: রেঞ্জকে ৫০০ দিয়ে ভাগ করে র্যান্ডম স্টেপ বের করে আবার ৫০০ দিয়ে গুণ
         const min = 100000;
-        const max = 2000000;
+        const max = 300000;
         const steps = Math.floor(Math.random() * ((max - min) / 500 + 1));
         amount = min + (steps * 500);
     } else {
         // ৫০,৫০০ থেকে ২,০০,০০০ পর্যন্ত (৬০% চান্স)
-        const min = 300000;
+        const min = 310000;
         const max = 2000000;
         const steps = Math.floor(Math.random() * ((max - min) / 500 + 1));
         amount = min + (steps * 500);
